@@ -1,63 +1,37 @@
-import React from "react";
-import { addMessage } from "../actions/messageActions";
-import { connect } from "react-redux";
+import React from 'react';
 
 class DisplayMessages extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      input: ""
+      input: '',
+      messages: []
     };
     this.handleChange = this.handleChange.bind(this);
     this.submitMessage = this.submitMessage.bind(this);
   }
-
+  // add handleChange() and submitMessage() methods here
   handleChange(event) {
     this.setState({ input: event.target.value });
   }
   submitMessage() {
-    this.props.submitNewMessage(this.state.input);
-    this.setState({
-      input: ""
-    });
+    this.setState({ messages: [...this.state.messages, this.state.input] });
+    this.setState({ input: '' });
   }
-
   render() {
     return (
       <div>
         <h2>Type in a new Message:</h2>
-
-        <input
-          type="text"
-          onChange={this.handleChange}
-          value={this.state.input}
-        />
-        <button onClick={this.submitMessage}>Add message</button>
+        {/* render an input, button, and ul here */}
+        <input onChange={this.handleChange} value={this.state.input} />
+        <button onClick={this.submitMessage}>Submit</button>
         <ul>
-          {this.props.messages.map(item => (
-            <li key={item}>{item}</li>
-          ))}
+          {this.state.messages.map((item, index) => {
+            return <li key={index}>{item}</li>;
+          })}
         </ul>
+        {/* change code above this line */}
       </div>
     );
   }
 }
-
-const mapStateToProps = state => {
-  return {
-    messages: state
-  };
-};
-
-const mapDispatchToProps = dispatch => {
-  return {
-    submitNewMessage: function(message) {
-      dispatch(addMessage(message));
-    }
-  };
-};
-
-export default connect(
-  mapStateToProps,
-  mapDispatchToProps
-)(DisplayMessages);
