@@ -1,6 +1,7 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import { addMessage } from '../actions/messageActions';
+import { removeMessage } from '../actions/messageActions';
 
 class DisplayMessages extends React.Component {
   constructor(props) {
@@ -10,6 +11,7 @@ class DisplayMessages extends React.Component {
     };
     this.handleChange = this.handleChange.bind(this);
     this.submitMessage = this.submitMessage.bind(this);
+    this.deleteMessage = this.deleteMessage.bind(this);
   }
   // add handleChange() and submitMessage() methods here
   handleChange(event) {
@@ -19,6 +21,9 @@ class DisplayMessages extends React.Component {
     this.props.submitNewMessage(this.state.input);
     this.setState({ input: '' });
   }
+  deleteMessage(index) {
+    this.props.deleteNewMessage(index);
+  }
   render() {
     return (
       <div>
@@ -26,9 +31,15 @@ class DisplayMessages extends React.Component {
         <input onChange={this.handleChange} value={this.state.input} />
         <button onClick={this.submitMessage}>Submit</button>
         <ul>
-          {console.log(this.props)}
           {this.props.messages.messages.map((item, index) => {
-            return <li key={index}>{item}</li>;
+            return (
+              <li key={index}>
+                {item}{' '}
+                <button onClick={() => this.deleteMessage(index)}>
+                  &times;
+                </button>
+              </li>
+            );
           })}
         </ul>
       </div>
@@ -44,6 +55,9 @@ const mapDispatchToProps = dispatch => {
   return {
     submitNewMessage: function(message) {
       dispatch(addMessage(message));
+    },
+    deleteNewMessage: function(index) {
+      dispatch(removeMessage(index));
     }
   };
 };
